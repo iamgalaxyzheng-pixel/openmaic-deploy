@@ -11,6 +11,8 @@ Run `.github/workflows/build-openmaic.yml` in this repository. The workflow
 builds on GitHub Actions and publishes
 `ghcr.io/<GitHub-owner>/openmaic:v1.0.3`. Make the package publicly readable,
 then record its immutable `sha256` digest. No LLM key is used at build time.
+The verified build on 2026-09-20 published
+`ghcr.io/iamgalaxyzheng-pixel/openmaic@sha256:8ba15400aeb160da9e21fc987ce619e4587cba37723b56f12392216c7905ec39`.
 
 ## Server installation
 
@@ -55,6 +57,18 @@ then record its immutable `sha256` digest. No LLM key is used at build time.
 6. Install `server/openmaic-backup.service` and `.timer` to `/etc/systemd/system/`,
    run a first backup, inspect its archive, and enable the timer. Keep these
    backups separate from finance backups.
+
+## Acceptance checks
+
+`sudo python3 /opt/openmaic/server/acceptance.py run` logs in locally, saves a
+small course to PostgreSQL, and generates a small classroom with image, video,
+voice, and web search disabled. It uses the configured model API and creates
+test content. `sudo python3 /opt/openmaic/server/acceptance.py verify` checks
+that the saved course and classroom remain readable after a restart.
+
+`sudo /opt/openmaic/server/restore-test.sh` extracts the newest backup into a
+temporary directory, restores its database into a temporary database, verifies
+the course row and classroom files, then removes the temporary data.
 
 ## Acceptance and rollback
 
