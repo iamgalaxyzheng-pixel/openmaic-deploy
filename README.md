@@ -30,6 +30,7 @@ then record its immutable `sha256` digest. No LLM key is used at build time.
    DATABASE_URL=postgres://openmaic:<same-password>@postgres:5432/openmaic
    PERSISTENCE_DEV_TOKEN=openmaic-tailnet-single-user-v1
    PERSISTENCE_ALLOW_INSECURE_DEV_AUTH=true
+   OPENMAIC_AGENT_RUNTIME_ENABLED=true
    ACCESS_CODE=<long-random-code>
    DEEPSEEK_API_KEY=<copied from finance.env without changing finance.env>
    DEEPSEEK_BASE_URL=https://api.deepseek.com

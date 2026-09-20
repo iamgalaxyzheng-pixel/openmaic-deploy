@@ -36,6 +36,7 @@ def main() -> None:
         f'DATABASE_URL=postgres://openmaic:{password}@postgres:5432/openmaic',
         'PERSISTENCE_DEV_TOKEN=openmaic-tailnet-single-user-v1',
         'PERSISTENCE_ALLOW_INSECURE_DEV_AUTH=true',
+        'OPENMAIC_AGENT_RUNTIME_ENABLED=true',
         f'ACCESS_CODE={access_code}',
         f'DEEPSEEK_API_KEY={key}',
         f'DEEPSEEK_BASE_URL={base_url}',
@@ -50,4 +51,3 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-
