@@ -1,0 +1,6 @@
+.env
+*.pem
+*.key
+*.tar.gz
+openmaic_known_hosts
+

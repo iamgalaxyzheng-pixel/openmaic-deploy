@@ -1,0 +1,72 @@
+name: openmaic
+
+services:
+  openmaic:
+    image: ${OPENMAIC_IMAGE:?Set OPENMAIC_IMAGE to a verified GHCR digest}
+    env_file: .env
+    environment:
+      NODE_ENV: production
+    ports:
+      - 127.0.0.1:3001:3000
+    volumes:
+      - openmaic-data:/app/data
+    networks:
+      - app-egress
+      - database
+    depends_on:
+      init-data:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+    mem_limit: 1g
+    memswap_limit: 1g
+    cpus: 0.35
+    pids_limit: 256
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 90s
+      retries: 3
+    restart: on-failure:3
+
+  init-data:
+    image: postgres:16-alpine
+    user: "0:0"
+    command: ["sh", "-c", "mkdir -p /data && chown -R 1001:1001 /data"]
+    volumes:
+      - openmaic-data:/data
+    network_mode: none
+    restart: "no"
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: openmaic
+      POSTGRES_USER: openmaic
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    command: ["postgres", "-c", "shared_buffers=32MB", "-c", "work_mem=2MB", "-c", "max_connections=20"]
+    volumes:
+      - openmaic-postgres:/var/lib/postgresql/data
+    networks:
+      - database
+    mem_limit: 256m
+    memswap_limit: 256m
+    cpus: 0.10
+    pids_limit: 100
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openmaic -d openmaic"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    restart: on-failure:3
+
+networks:
+  app-egress: {}
+  database:
+    internal: true
+
+volumes:
+  openmaic-data: {}
+  openmaic-postgres: {}

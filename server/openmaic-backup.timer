@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily OpenMAIC backup
+
+[Timer]
+OnCalendar=*-*-* 04:00:00 Asia/Shanghai
+Persistent=true
+Unit=openmaic-backup.service
+
+[Install]
+WantedBy=timers.target
+

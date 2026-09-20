@@ -1,0 +1,9 @@
+[Unit]
+Description=Back up OpenMAIC PostgreSQL and application data
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/openmaic/server/backup.sh
+
